@@ -1,0 +1,8 @@
+[
+    { "url": "/api/ping", "method": "GET" },
+    { "url": "/api/users/signin", "method": "POST" },
+    { "url": "/api/users/signup", "method": "POST" },
+    { "url": "/api/users/activation", "method": "PUT" },
+    { "url": "/api/users/resetpassword/request", "method": "POST" },
+    { "url": "/api/users/resetpassword/change", "method": "PUT" }
+]
