@@ -28,11 +28,11 @@ module.exports = app => {
 
     let models;
 
-    readdirSync(join(appRoot, "server", "templates", "mail")).forEach(file => {
+    readdirSync(join(appRoot, "templates", "mail")).forEach(file => {
         console.log("[MAILER] -> Load Mail Template " + file);
 
         const html = readFileSync(
-            join(appRoot, "server", "templates", "mail", file),
+            join(appRoot, "templates", "mail", file),
             {
                 encoding: "utf-8"
             }

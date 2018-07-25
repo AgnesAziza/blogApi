@@ -71,7 +71,7 @@ logger.info("Start Server");
 //MONGODB : Database Connection
 mongoose.Promise = global.Promise;
 
-const Models = require(join(process.cwd(), "server", "config", "models"))(
+const Models = require(join(process.cwd(), "config", "models"))(
     mongoose
 );
 
@@ -139,7 +139,7 @@ app.set("MAIL_FROM", nconf.get("MAIL_FROM"));
 app.set("SENDGRID_API", nconf.get("SENDGRID_API"));
 
 //Mailer Import
-const mailController = require("./server/tools/mail/mailController")(app);
+const mailController = require("./tools/mail/mailController")(app);
 
 //Add Error Log
 if (nconf.get("SENTRY_KEY")) {
@@ -186,18 +186,18 @@ app.all("*", (req, res, next) => {
 
 //EXPRESS: URLs Restriction
 
-const tokensMiddleware = require("./server/tools/auth/tokensMiddleware")(
+const tokensMiddleware = require("./tools/auth/tokensMiddleware")(
     app,
     Models
 );
-const configUrls = require("./server/tools/auth/configUrls.json");
+const configUrls = require("./tools/auth/configUrls.json");
 
 app.all("/api/*", (req, res, next) => {
     tokensMiddleware.checkTokens(req, res, next, configUrls);
 });
 
 //API : Get Routes
-require(join(process.cwd(), "server", "config", "routes"))(
+require(join(process.cwd(), "config", "routes"))(
     app,
     Models,
     mailController
@@ -217,13 +217,6 @@ if (nconf.get("SENTRY_KEY")) {
     });
 }
 
-app.use(express.static("client/build"));
-
-//API : Default result
-app.all("*", (req, res) => {
-    res.send("client/build/index.html");
-});
-
 //EXPRESS : Start Server
 app.disable("x-powered-by");
 app.listen(nconf.get("PORT") || 80);
@@ -234,7 +227,7 @@ console.log("[API] -> Listening on Port : " + nconf.get("PORT"));
 
 //INTERVAL FILES
 
-require(join(process.cwd(), "server", "config", "interval"))(app);
+require(join(process.cwd(), "config", "interval"))(app);
 
 ///////////////////////////////////////////////////////////////////////////////
 

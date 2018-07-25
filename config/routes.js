@@ -13,7 +13,7 @@ module.exports = function() {
     const args =
         arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments);
 
-    getDirectories("./server/components").forEach(function(componentSubFolder) {
+    getDirectories("./components").forEach(function(componentSubFolder) {
         readdirSync(componentSubFolder).forEach(file => {
             if (file.endsWith("Routes.js")) {
                 console.log("[API] -> Load Routes from " + file);

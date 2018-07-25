@@ -13,7 +13,7 @@ module.exports = mongoose => {
      *      - id_User
      *      - creation
      *     properties:
-     *       label:
+     *       token:
      *         type: string
      *       creation:
      *         type: date
