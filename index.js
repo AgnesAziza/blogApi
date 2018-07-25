@@ -71,11 +71,12 @@ logger.info("Start Server");
 //MONGODB : Database Connection
 mongoose.Promise = global.Promise;
 
-const Models = require(join(process.cwd(), "config", "models"))(
-    mongoose
-);
+const Models = require(join(process.cwd(), "config", "models"))(mongoose);
 
-mongoose.connect(nconf.get("MONGODB_URI"));
+mongoose.connect(
+    nconf.get("MONGODB_URI"),
+    { useNewUrlParser: true }
+);
 
 ///////////////////////////////////////////////////////////////////////////////
 //PASSPORT CONFIGURATION
@@ -93,10 +94,10 @@ User.count({}, (err, count) => {
     if (count == 0) {
         //NO ADMIN IN DATABASE SO ADD IT ONE
         let newUser = new User({
-            email: "admin-toreplace-quickly@ages.com",
-            active: true,
-            verified: true,
-            group: "superadmin"
+            adresseMail: "admin@ages.com",
+            nom: "Admin",
+            pseudo: "admin",
+            pays: "fr"
         });
 
         const newUserPwd = hash({ user: "admin", date: Date.now() });
@@ -110,7 +111,7 @@ User.count({}, (err, count) => {
                 );
                 console.log(
                     "\x1b[31m",
-                    "[DB INIT] -> USERNAME: " + result.email
+                    "[DB INIT] -> USERNAME: " + result.adresseMail
                 );
                 console.log("\x1b[31m", "[DB INIT] -> PASSWORD: " + newUserPwd);
                 console.log("\x1b[31m", "[DB INIT] -> /!\\ ----------- /!\\");
@@ -186,10 +187,7 @@ app.all("*", (req, res, next) => {
 
 //EXPRESS: URLs Restriction
 
-const tokensMiddleware = require("./tools/auth/tokensMiddleware")(
-    app,
-    Models
-);
+const tokensMiddleware = require("./tools/auth/tokensMiddleware")(app, Models);
 const configUrls = require("./tools/auth/configUrls.json");
 
 app.all("/api/*", (req, res, next) => {
@@ -197,11 +195,7 @@ app.all("/api/*", (req, res, next) => {
 });
 
 //API : Get Routes
-require(join(process.cwd(), "config", "routes"))(
-    app,
-    Models,
-    mailController
-);
+require(join(process.cwd(), "config", "routes"))(app, Models, mailController);
 
 //Handle Error
 if (nconf.get("SENTRY_KEY")) {
